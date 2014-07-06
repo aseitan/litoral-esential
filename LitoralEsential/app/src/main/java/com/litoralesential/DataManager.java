@@ -2,38 +2,32 @@ package com.litoralesential;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //IMPORTS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
+
+import com.litoralesential.downloadable.AppDataDownloadable;
+import com.litoralesential.downloadable.CategoryImageDownloadable;
+import com.litoralesential.downloadable.Downloadable;
+import com.litoralesential.downloadable.HttpMethod;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.litoralesential.Utils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class DataManager
@@ -50,7 +44,7 @@ public class DataManager
     private ArrayList<Category> serverCategories;
     private ArrayList<Objective> serverObjectives;
     private MainActivity mActivity;
-    static String serverResponse = null;
+    private byte[] serverResponse = null;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Class implementation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +54,7 @@ public class DataManager
         mActivity = activity;
         mUserFile = f;
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<Category> GetLocalCategories()
     {
         return localCategories;
@@ -68,27 +62,6 @@ public class DataManager
     public ArrayList<Objective> GetLocalObjectives()
     {
         return localObjectives;
-    }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void writeToLocalFile(String s)
-    {
-        if(s != null)
-        {
-            try
-            {
-                File localFile = new File(mUserFile + File.separator + Utils.userFile);
-                if(localFile != null)
-                {
-                    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(mUserFile + File.separator + Utils.userFile)));
-                    bufferedWriter.write(s);
-                    bufferedWriter.close();
-                }
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void fillLocalArraysFromLocalFile()
@@ -194,16 +167,18 @@ public class DataManager
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void fillServerArraysFromServer()
     {
-        new ServiceHandler().execute();
+        AppDataDownloadable dld = new AppDataDownloadable();
+        dld.setUrl(Utils.jsonSiteURL);
+        new ServiceHandler(true).execute(dld);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public int updateFromLocalFile()
+    public boolean updateFromLocalFile()
     {
         fillLocalArraysFromLocalFile();
         if( localCategories!=null && localCategories.size() > 0 && localObjectives!=null && localObjectives.size() > 0)
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private boolean isLocalCategoriesUpdateRequired()
@@ -240,95 +215,163 @@ public class DataManager
         return false;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void requestCategoryImages()
+    {
+        CategoryImageDownloadable []cdldArray = new CategoryImageDownloadable[localCategories.size()];
+        boolean hasImages = false;
+
+        for(int i=0; i< localCategories.size(); i++)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////
+            localCategories.get(i).imageURL = "http://icons.iconarchive.com/icons/cedarseed/patisserie/128/Fondant-au-chocolat-icon.png"; // TEST ONLY
+            ////////////////////////////////////////////////////////////////////////////////////////
+
+            if(localCategories.get(i).imageURL.isEmpty())
+            {
+                continue;
+            }
+            CategoryImageDownloadable dld = new CategoryImageDownloadable();
+            dld.setUrl(localCategories.get(i).imageURL);
+            dld.setCategory(localCategories.get(i));
+            cdldArray[i] = dld;
+            hasImages = true;
+        }
+
+        if(hasImages) {
+            new ServiceHandler(false).execute(cdldArray);
+        }
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void downloadComplete(Downloadable dld)
+    {
+        switch (dld.getType())
+        {
+            case NONE:
+                break;
+            case APP_DATA:
+				boolean hasLocalFile = updateFromLocalFile();
+
+				if(dld.getStatusCode() != 200 && !hasLocalFile)
+				{
+					//we are fucked, basically
+					//could not connect to server and no local file saved
+					//this is where we should construct a message for the user that tells him he
+					//cannot use the application unless he can connect to server
+
+					return;
+				}
+
+				if(dld.getStatusCode() != 200)
+				{
+					//tell the user somehow the app could not connect to server
+					//in the meantime use the local file
+
+					fillLocalArraysFromLocalFile();
+					mActivity.InitUI();
+
+					return;
+				}
+
+				//at this point we have the server json. Use it if we need an update
+
+                fillServerArraysFromString(new String(dld.getResponseBody()));
+                if(isLocalCategoriesUpdateRequired() || isLocalObjectivesUpdateRequired())
+                {
+                    Utils.writeToFile(dld.getResponseBody(), mUserFile + File.separator + Utils.userFile);
+                    fillLocalArraysFromLocalFile();
+                    requestCategoryImages();
+					mActivity.InitUI();
+                    //if(mActivity != null)
+                    //    mActivity.reload();
+                }
+                break;
+            case CATEGORY_IMAGE:
+                CategoryImageDownloadable cdld = (CategoryImageDownloadable)dld;
+
+                boolean success = Utils.writeToFile(cdld.getResponseBody(), Utils.externalPathRoot +
+                        File.separator + "cat_img_" + Integer.toString(cdld.getCategory().id));
+
+				if(success)
+				{
+					//refresh category list
+					mActivity.RefreshCategoryAdapter();
+				}
+
+                break;
+            case OBJECTIVE_IMAGE:
+                break;
+        }
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //END
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public class ServiceHandler extends AsyncTask<Void, Void, Void>
+    public class ServiceHandler extends AsyncTask<Downloadable, Void, List<Downloadable>>
     {
-        public final static int GET = 1;
-        public final static int POST = 2;
+        private boolean showWaitDialog = false;
+
+        public ServiceHandler(boolean showWaitDialog){
+            this.showWaitDialog = showWaitDialog;
+        }
 
         @Override
         protected void onPreExecute()
         {
             super.onPreExecute();
-            if(mActivity!= null)
-            {
-                mActivity.pDialog = new ProgressDialog(mActivity);
-                mActivity.pDialog.setMessage("Please wait...");
-                mActivity.pDialog.setCancelable(false);
-                mActivity.pDialog.show();
+            if(showWaitDialog) {
+                if (mActivity != null) {
+                    mActivity.pDialog = new ProgressDialog(mActivity);
+                    mActivity.pDialog.setMessage("Please wait...");
+                    mActivity.pDialog.setCancelable(false);
+                    mActivity.pDialog.show();
+                }
             }
         }
 
         @Override
-        protected Void doInBackground(Void... arg0)
+        protected List<Downloadable> doInBackground(Downloadable... args)
         {
             // Creating service handler class instance
             ConnectionManager cm = new ConnectionManager();
+            List<Downloadable> dldList = new ArrayList<Downloadable>();
 
-            // Making a request to url and getting response
-            String jsonStr = cm.makeServiceCall(Utils.jsonSiteURL, ServiceHandler.GET);
-
-            return null;
-
-            /*
-            Log.d("Response: ", "> " + jsonStr);
-
-            if (jsonStr != null)
-            {
-                try
-                {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else
-            {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
+            for(Downloadable dld : args){
+                // Making a request to url and getting response
+                cm.makeServiceCall(dld);
+                dldList.add(dld);
             }
 
-            return null;
-            */
+            return dldList;
         }
 
         @Override
-        protected void onPostExecute(Void result)
+        protected void onPostExecute(List<Downloadable> result)
         {
             super.onPostExecute(result);
-            if(mActivity!= null && mActivity.pDialog!=null)
-            {
-                if(mActivity.pDialog.isShowing())
-                {
-                    mActivity.pDialog.dismiss();
+            if(showWaitDialog) {
+                if (mActivity != null && mActivity.pDialog != null) {
+                    if (mActivity.pDialog.isShowing()) {
+                        mActivity.pDialog.dismiss();
+                    }
                 }
             }
 
-            //check if update is required and update
-            fillServerArraysFromString(serverResponse);
-            if(isLocalCategoriesUpdateRequired() || isLocalObjectivesUpdateRequired())
+            for(Downloadable dld : result)
             {
-                writeToLocalFile(serverResponse);
-                fillLocalArraysFromLocalFile();
-                if(mActivity!=null)
-                    mActivity.reload();
+                //send result
+                downloadComplete(dld);
             }
         }
     }
 
     class ConnectionManager
     {
-        public final static int GET = 1;
-        public final static int POST = 2;
 
-        public String makeServiceCall(String url, int method)
+/*        public String makeServiceCall(String url, int method)
         {
             return this.makeServiceCall(url, method, null);
-        }
+        }*/
 
-        public String makeServiceCall(String url, int method, List<NameValuePair> params)
+        public byte[] makeServiceCall(Downloadable dld)
         {
             try
             {
@@ -338,25 +381,29 @@ public class DataManager
                 HttpResponse httpResponse = null;
 
                 // Checking http request method type
-                if (method == POST)
+                if (dld.getHttpMethod() == HttpMethod.POST)
                 {
-                    HttpPost httpPost = new HttpPost(url);
+                    HttpPost httpPost = new HttpPost(dld.getUrl());
                     // adding post params
-                    if (params != null)
+                    if (dld.hasParameters())
                     {
-                        httpPost.setEntity(new UrlEncodedFormEntity(params));
+                        httpPost.setEntity(dld.getPOSTParams());
                     }
                     httpResponse = httpClient.execute(httpPost);
                 }
-                else if (method == GET)
+                else if (dld.getHttpMethod() == HttpMethod.GET)
                 {
                     try
                     {
+                        String url = "";
                         // appending params to url
-                        if (params != null)
+                        if (dld.hasParameters())
                         {
-                            String paramString = URLEncodedUtils.format(params, "utf-8");
-                            url += "?" + paramString;
+                            url = dld.getUrlWithParams();
+                        }
+                        else
+                        {
+                            url = dld.getUrl();
                         }
                         HttpGet httpGet = new HttpGet(url);
                         httpResponse = httpClient.execute(httpGet);
@@ -369,7 +416,9 @@ public class DataManager
                 try
                 {
                     httpEntity = httpResponse.getEntity();
-                    serverResponse = EntityUtils.toString(httpEntity);
+                    serverResponse = EntityUtils.toByteArray(httpEntity);
+					dld.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+					dld.setResponseBody(serverResponse);
                 }
                 catch (Exception e)
                 {
