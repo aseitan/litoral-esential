@@ -237,7 +237,8 @@ public class DataManager
             hasImages = true;
         }
 
-        if(hasImages) {
+        if(hasImages)
+        {
             new ServiceHandler(false).execute(cdldArray);
         }
     }
@@ -283,6 +284,11 @@ public class DataManager
 					mActivity.InitUI();
                     //if(mActivity != null)
                     //    mActivity.reload();
+                }
+                else
+                {
+                    if(mActivity != null)
+                        mActivity.InitUI();
                 }
                 break;
             case CATEGORY_IMAGE:

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,13 +12,12 @@
     android:id="@+id/scrollView"
     android:layout_margin="2dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_centerHorizontal="true" >
-
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical" >
@@ -25,14 +29,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textSize="16sp"
         android:singleLine="true"
-        android:hint="Numele obiectivului: dfasd \n\n\n\nxxxx\n\n\n\nxxx\n\n\n\nxxx\nasda\n\n\n\n\ndasdsa\n\n\n\n\ndsa" />
+        android:hint="Numele obie    ctivului: dfasd \n\n\n\nxxxx\n\n\n\nxxx\n\n\n\nxxx\nasda\n\n\n\n\ndasdsa\n\n\n\n\ndsa" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -40,38 +43,73 @@
         android:padding="10dp"
         android:textSize="16sp"
         android:singleLine="false"
-        android:hint="Descrierea obiectivului:" />
-
+        android:hint="Descrierea obiectivului:d" />
 
     <TextView
+        android:id="@+id/telephone"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textSize="16sp"
         android:singleLine="true"
-        android:hint="Telefon: 0728.593.710 " />
-
-<!-- HARTA -->
-
-<!--    <com.google.android.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mapview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:apiKey="Our key should be inserted here!"
-        />-->
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="2dp"
-        android:textColor="#000000"
-        android:text="Inapoi" />
+        android:hint="Telefon: 0728.593.710 "
+        />
 
 </LinearLayout>
+
 </ScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+        android:id="@+id/map_frame"
+        android:layout_margin="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:hint="-------------------------------" />
+
+        <com.google.android.gms.maps.MapView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:hint="**************************************" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+    android:id="@+id/button2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_margin="2dp"
+    android:textColor="#000000"
+    android:text="Inapoi" />
+
+</RelativeLayout>
+
 </RelativeLayout>

@@ -24,7 +24,7 @@ public class ObjectiveList extends Fragment
 {
     ListView listView;
     List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
-    Activity mActivity;
+    MainActivity mActivity;
     ArrayList<Objective> chosenObjectives;
     String[] displayObjectives;
     Fragment mFragment;
@@ -35,7 +35,7 @@ public class ObjectiveList extends Fragment
     {
         super();
         mFragment = this;
-        mActivity = a;
+        mActivity = (MainActivity)a;
         showingList = true;
         chosenObjectives = new ArrayList<Objective>();
     }
@@ -79,7 +79,7 @@ public class ObjectiveList extends Fragment
                 {
                     if (mActivity != null)
                     {
-                        ObjectiveDetails obiectivFragment = new ObjectiveDetails(chosenObjectives.get(position));
+                        ObjectiveDetails obiectivFragment = new ObjectiveDetails(chosenObjectives.get(position), mActivity);
                         FragmentManager fragmentManager = mActivity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.frame_container, obiectivFragment).commit();
                     }

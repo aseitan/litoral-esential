@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView3"
+            android:clickable="false">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageObjective"
+                    android:src="@drawable/muzeu"
+                    android:scaleType="fitStart"
+                    android:adjustViewBounds="true" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Muzeul de Arta Constanta"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/objectiveName"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/line"
+                    android:layout_marginBottom="20dp" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Adresa:"
+                             />
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="5sp"
+                            android:id="@+id/objectiveAddress"
+                            android:text="Bd-ul Mamaia, nr 23"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Telefon:" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="0728593710"
+                            android:layout_marginLeft="5sp"
+                            android:textStyle="bold"
+                            android:id="@+id/objectivePhone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5sp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Website:"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="www.muzeuldearta.com"
+                        android:layout_marginLeft="5sp"
+                        android:textStyle="bold"
+                        android:id="@+id/objectiveWebsite" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/line"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Muzeul de Artă Cluj-Napoca este una dintre cele mai prestigioase instituţii muzeale cu profil artistic din România fiind nominalizat în anul 1997 pentru prestigiosul Premiu al Muzeului European al Anului- EMYA. Calitatea programelor culturale organizate a fost recompensată cu premii naţionale acordate de Ministerul Culturii şi Patrimoniului Naţional pentru expoziţiile Cultură şi artă armenească la Gherla (2003), Abodi Nagy Béla (2005) şi Avangarda din România în colecţii clujene (2007) precum şi cu distincţia acordată de Comitetul Român al ICOM pentru impactul asupra publicului a programului „De gustibus et coloribus…” (2010). "
+                    android:id="@+id/objectiveDescription"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="20dp" />
+
+                <com.google.android.gms.maps.MapView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/map"
+                    android:layout_centerHorizontal="true"
+                    android:clickable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

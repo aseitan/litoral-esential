@@ -59,84 +59,6 @@ public class MainActivity extends Activity
         dataManager = new DataManager(mActivity, getFilesDir());
 
 		dataManager.fillServerArraysFromServer();
-
-//		if (savedInstanceState == null)
-//		{
-//			// on first time display view for first nav item
-//			Toast.makeText(mActivity.getApplicationContext(), "Pentru a accesa meniul, trageti dinspre stanga!", Toast.LENGTH_LONG).show();
-//			displayView(0);
-//		}
-
-     /*   if(dataManager.updateFromLocalFile() == 1)
-        {
-            //we have a valid load
-            mTitle = mDrawerTitle = getTitle();
-
-            ArrayList<Category> categories = dataManager.GetLocalCategories();
-            navMenuTitles = new String[categories.size()];
-
-            navDrawerItems = new ArrayList<NavDrawerItem>();
-
-            String categoryName;
-            int categoryID;
-            for(int i=0; i<categories.size(); i++)
-            {
-                categoryName = categories.get(i).name;
-                categoryID = categories.get(i).id;
-                navDrawerItems.add(new NavDrawerItem(categoryID, categoryName));
-
-                navMenuTitles[i] = categoryName;
-            }
-
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-
-            mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
-            // setting the nav drawer list adapter
-            adapter = new NavDrawerListAdapter(mActivity, navDrawerItems);
-            mDrawerList.setAdapter(adapter);
-
-            // enabling action bar app icon and behaving it as toggle button
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, //nav menu toggle icon
-                    R.string.app_name, // nav drawer open - description for accessibility
-                    R.string.app_name // nav drawer close - description for accessibility
-            )
-            {
-                public void onDrawerClosed(View view)
-                {
-                    getActionBar().setTitle(mTitle);
-                    // calling onPrepareOptionsMenu() to show action bar icons
-                    invalidateOptionsMenu();
-                }
-
-                public void onDrawerOpened(View drawerView)
-                {
-                    getActionBar().setTitle(mDrawerTitle);
-                    // calling onPrepareOptionsMenu() to hide action bar icons
-                    invalidateOptionsMenu();
-                }
-            };
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            if (savedInstanceState == null)
-            {
-                // on first time display view for first nav item
-                Toast.makeText(mActivity.getApplicationContext(), "Pentru a accesa meniul, trageti dinspre stanga!", Toast.LENGTH_LONG).show();
-                displayView(0);
-            }
-
-            dataManager.fillServerArraysFromServer();
-        }
-        else
-        {
-            //we show a loading and we wait...eh, kind of
-            dataManager.fillServerArraysFromServer();
-        }*/
     }
 
 	public void InitUI()
@@ -204,7 +126,8 @@ public class MainActivity extends Activity
             android.content.pm.PackageManager manager = this.getPackageManager();
             android.content.pm.PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
             strPackageName = info.packageName;
-        }catch(Exception e){}
+        }
+        catch(Exception e){}
 
         String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         String externalPathRoot = externalPath + File.separator + "Android" + File.separator + "data" + File.separator + strPackageName;
@@ -233,7 +156,8 @@ public class MainActivity extends Activity
 
 	public void RefreshCategoryAdapter()
 	{
-		if(adapter != null) {
+		if(adapter != null)
+        {
 			adapter.notifyDataSetChanged();
 		}
 	}
