@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.litoralesential.adapter.NavDrawerListAdapter;
 import com.litoralesential.model.NavDrawerItem;
@@ -54,6 +53,7 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 
         CreateAppDirectory();
+		DetectScreenSize();
 
         mActivity = this;
         dataManager = new DataManager(mActivity, getFilesDir());
@@ -133,11 +133,11 @@ public class MainActivity extends Activity
         String externalPathRoot = externalPath + File.separator + "Android" + File.separator + "data" + File.separator + strPackageName;
         Utils.externalPathRoot = externalPathRoot;
 
-        File rootDir = null;
+        File rootDir;
         try
         {
             rootDir = new File(externalPathRoot);
-            boolean res = false;
+            boolean res;
             int cnt = 0;
 
             do
@@ -145,7 +145,7 @@ public class MainActivity extends Activity
                 res = rootDir.mkdirs();
                 ++cnt;
             }
-            while (res == false && cnt < 3);
+            while (!res && cnt < 3);
         }
         catch(Exception ex){}
         finally
@@ -153,6 +153,30 @@ public class MainActivity extends Activity
             rootDir = null;
         }
     }
+
+	private void DetectScreenSize()
+	{
+		Utils.SCREEN_SIZE = getResources().getConfiguration().screenLayout &
+				Configuration.SCREENLAYOUT_SIZE_MASK;
+
+		switch (Utils.SCREEN_SIZE){
+			case Configuration.SCREENLAYOUT_SIZE_SMALL:
+				Utils.OBJECTIVE_IMAGES_URL = "http://www.reporterntv.ro/obiective/%d/small.jpg";
+				break;
+			case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+				Utils.OBJECTIVE_IMAGES_URL = "http://www.reporterntv.ro/obiective/%d/normal.jpg";
+				break;
+			case Configuration.SCREENLAYOUT_SIZE_LARGE:
+				Utils.OBJECTIVE_IMAGES_URL = "http://www.reporterntv.ro/obiective/%d/large.jpg";
+				break;
+			case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+				Utils.OBJECTIVE_IMAGES_URL = "http://www.reporterntv.ro/obiective/%d/extralarge.jpg";
+				break;
+			default:
+				Utils.OBJECTIVE_IMAGES_URL = "http://www.reporterntv.ro/obiective/%d/normal.jpg";
+				break;
+		}
+	}
 
 	public void RefreshCategoryAdapter()
 	{
@@ -233,12 +257,12 @@ public class MainActivity extends Activity
 	private void displayView(int position)
     {
 		// update the main content by replacing fragments
-        ObjectiveList fragment = null;
-        fragment = new ObjectiveList(mActivity);
+        ObjectiveList fragment;
+        fragment = ObjectiveList.newInstance();
 
         //navMenuTitles[position]
 
-		if (fragment != null && dataManager != null)
+		if (dataManager != null)
         {
             if(dataManager.GetLocalCategories() != null)
             {

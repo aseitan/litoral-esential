@@ -31,6 +31,12 @@ public class Utils
     public static final String userFile = "data.txt";
     public static final String categoryImageFolder = "category_images";
 
+	public static final String CATEGORY_IMAGE_PREFIX = "cat_img_";
+	public static final String OBJECTIVE_IMAGE_PREFIX = "obj_img_";
+
+	public static int SCREEN_SIZE = 0;
+	public static String OBJECTIVE_IMAGES_URL = "";
+
     public static String externalPathRoot = "";
 
     public static final String jsonSiteURL = "http://www.reporterntv.ro/litoral_esential/appStream";

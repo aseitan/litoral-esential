@@ -1,7 +1,8 @@
 package com.litoralesential;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,31 +15,37 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.File;
 
 public class ObjectiveDetails extends Fragment
 {
     Objective chosenObjective;
     private MapView mMapView;
     private GoogleMap mMap;
-    private Bundle mBundle;
     static final LatLng HAMBURG = new LatLng(53.558, 9.927);
     static final LatLng KIEL = new LatLng(53.551, 9.993);
 
-    private Activity mActivity;
 
-    public ObjectiveDetails()
-    {
-        super();
-        chosenObjective = null;
-    }
-    public ObjectiveDetails(Objective obj, Activity m)
-    {
-        super();
-        chosenObjective = obj;
-        mActivity = m;
-    }
+	public static ObjectiveDetails newInstance(Objective obj) {
+		ObjectiveDetails objective = new ObjectiveDetails();
+
+		// Supply index input as an argument.
+		Bundle args = new Bundle();
+		args.putParcelable("objective", obj);
+		objective.setArguments(args);
+
+		return objective;
+	}
+
+	public void onCreate (Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+
+		Bundle mBundle = getArguments();
+		chosenObjective = mBundle.getParcelable("objective");
+	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -68,7 +75,7 @@ public class ObjectiveDetails extends Fragment
             mMapView = (MapView) rootView.findViewById(R.id.map);
             if(mMapView != null)
             {
-                mMapView.onCreate(mBundle);
+                mMapView.onCreate(savedInstanceState);
 
                 //TODO: load the actual position
                 mMapView.getMap().addMarker(new MarkerOptions().position(HAMBURG).title("Hamburg"));
@@ -83,6 +90,13 @@ public class ObjectiveDetails extends Fragment
             if(objectiveImage != null)
             {
                 //TODO: load the actual position
+				String objID = Integer.toString(chosenObjective.id);
+
+				Bitmap bm;
+				bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.OBJECTIVE_IMAGE_PREFIX + objID);
+				if(bm != null) {
+					objectiveImage.setImageBitmap(bm);
+				}
             }
 
             TextView objectiveName = (TextView) rootView.findViewById(R.id.objectiveName);

@@ -16,9 +16,7 @@ import com.litoralesential.R;
 import com.litoralesential.Utils;
 import com.litoralesential.model.NavDrawerItem;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class NavDrawerListAdapter extends BaseAdapter {
@@ -63,7 +61,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
             String drawerItemID = Integer.toString(navDrawerItems.get(position).getID());
 
             Bitmap bm;
-            bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + "cat_img_" + drawerItemID);
+            bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.CATEGORY_IMAGE_PREFIX + drawerItemID);
             if(bm != null) {
                 categoryImage.setImageBitmap(bm);
                 navDrawerItems.get(position).setUpdatedImage(true);

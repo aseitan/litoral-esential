@@ -1,9 +1,7 @@
 package com.litoralesential;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,33 +10,27 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ObjectiveList extends Fragment
 {
     ListView listView;
-    List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
-    MainActivity mActivity;
+	MainActivity mActivity;
     ArrayList<Objective> chosenObjectives;
     String[] displayObjectives;
-    Fragment mFragment;
-    private boolean showingList;
 
-    public ObjectiveList(){super();mFragment = this;showingList = false;}
-    public ObjectiveList(Activity a)
-    {
-        super();
-        mFragment = this;
-        mActivity = (MainActivity)a;
-        showingList = true;
-        chosenObjectives = new ArrayList<Objective>();
-    }
+	public static ObjectiveList newInstance() {
+		ObjectiveList objective = new ObjectiveList();
+		return objective;
+	}
+
+	public void onCreate (Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		mActivity = (MainActivity)getActivity();
+	}
+
     public void SetChosenObjectives(ArrayList<Objective> co)
     {
         chosenObjectives = co;
@@ -79,9 +71,9 @@ public class ObjectiveList extends Fragment
                 {
                     if (mActivity != null)
                     {
-                        ObjectiveDetails obiectivFragment = new ObjectiveDetails(chosenObjectives.get(position), mActivity);
+                        ObjectiveDetails objectiveFragment = ObjectiveDetails.newInstance(chosenObjectives.get(position));
                         FragmentManager fragmentManager = mActivity.getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.frame_container, obiectivFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.frame_container, objectiveFragment).commit();
                     }
                 }
             });

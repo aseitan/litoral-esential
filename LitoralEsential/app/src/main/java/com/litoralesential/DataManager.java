@@ -10,6 +10,7 @@ import com.litoralesential.downloadable.AppDataDownloadable;
 import com.litoralesential.downloadable.CategoryImageDownloadable;
 import com.litoralesential.downloadable.Downloadable;
 import com.litoralesential.downloadable.HttpMethod;
+import com.litoralesential.downloadable.ObjectiveImageDownloadable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class DataManager
 {
@@ -69,7 +71,7 @@ public class DataManager
         try
         {
             File localFile = new File(mUserFile + File.separator + Utils.userFile);
-            if(localFile!=null && localFile.exists())
+            if(localFile.exists())
             {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(localFile));
                 String read;
@@ -194,7 +196,7 @@ public class DataManager
                 Category localCategory = localCategories.get(j);
                 if( serverCategory.id == localCategory.id ) found = true;
             }
-            if(found==false) return true;
+            if(!found) return true;
         }
         return false;
     }
@@ -210,11 +212,11 @@ public class DataManager
                 Objective localObjective = localObjectives.get(j);
                 if( serverObjective.id == localObjective.id ) found = true;
             }
-            if(found==false) return true;
+            if(!found) return true;
         }
         return false;
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
     private void requestCategoryImages()
     {
         CategoryImageDownloadable []cdldArray = new CategoryImageDownloadable[localCategories.size()];
@@ -242,7 +244,35 @@ public class DataManager
             new ServiceHandler(false).execute(cdldArray);
         }
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+	private void requestObjectiveImages()
+	{
+		ObjectiveImageDownloadable []cdldArray = new ObjectiveImageDownloadable[localObjectives.size()];
+		boolean hasImages = false;
+
+		for(int i=0; i< localObjectives.size(); i++)
+		{
+			////////////////////////////////////////////////////////////////////////////////////////
+			//localObjectives.get(i).imageURL = "http://i2.cdn.turner.com/cnn/dam/assets/130530161523-100-beaches-crane-beach-horizontal-gallery.jpg"; // TEST ONLY
+			////////////////////////////////////////////////////////////////////////////////////////
+
+			if(localObjectives.get(i).imageURL.isEmpty())
+			{
+				continue;
+			}
+			ObjectiveImageDownloadable dld = new ObjectiveImageDownloadable();
+			dld.setUrl(localObjectives.get(i).imageURL);
+			dld.setObjective(localObjectives.get(i));
+			cdldArray[i] = dld;
+			hasImages = true;
+		}
+
+		if(hasImages)
+		{
+			new ServiceHandler(false).execute(cdldArray);
+		}
+	}
+////////////////////////////////////////////////////////////////////////////////////////////////////
     private void downloadComplete(Downloadable dld)
     {
         switch (dld.getType())
@@ -281,6 +311,7 @@ public class DataManager
                     Utils.writeToFile(dld.getResponseBody(), mUserFile + File.separator + Utils.userFile);
                     fillLocalArraysFromLocalFile();
                     requestCategoryImages();
+					requestObjectiveImages();
 					mActivity.InitUI();
                     //if(mActivity != null)
                     //    mActivity.reload();
@@ -291,24 +322,41 @@ public class DataManager
                         mActivity.InitUI();
                 }
                 break;
-            case CATEGORY_IMAGE:
-                CategoryImageDownloadable cdld = (CategoryImageDownloadable)dld;
+            case CATEGORY_IMAGE: {
+				if(dld.getStatusCode() != 200)
+					return;
 
-                boolean success = Utils.writeToFile(cdld.getResponseBody(), Utils.externalPathRoot +
-                        File.separator + "cat_img_" + Integer.toString(cdld.getCategory().id));
+				CategoryImageDownloadable cdld = (CategoryImageDownloadable) dld;
 
-				if(success)
-				{
+				boolean success = Utils.writeToFile(cdld.getResponseBody(), Utils.externalPathRoot +
+						File.separator + Utils.CATEGORY_IMAGE_PREFIX + Integer.toString(cdld.getCategory().id));
+
+				if (success) {
 					//refresh category list
 					mActivity.RefreshCategoryAdapter();
 				}
 
-                break;
-            case OBJECTIVE_IMAGE:
-                break;
+				break;
+			}
+            case OBJECTIVE_IMAGE: {
+				if(dld.getStatusCode() != 200)
+					return;
+
+				ObjectiveImageDownloadable cdld = (ObjectiveImageDownloadable) dld;
+
+				boolean success = Utils.writeToFile(cdld.getResponseBody(), Utils.externalPathRoot +
+						File.separator + Utils.OBJECTIVE_IMAGE_PREFIX + Integer.toString(cdld.getObjective().id));
+
+				if (success) {
+					//refresh category list
+					mActivity.RefreshCategoryAdapter();
+				}
+
+				break;
+			}
         }
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //END
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public class ServiceHandler extends AsyncTask<Downloadable, Void, List<Downloadable>>
@@ -383,7 +431,7 @@ public class DataManager
             {
                 // http client
                 DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpEntity httpEntity = null;
+                HttpEntity httpEntity;
                 HttpResponse httpResponse = null;
 
                 // Checking http request method type
@@ -401,7 +449,7 @@ public class DataManager
                 {
                     try
                     {
-                        String url = "";
+                        String url;
                         // appending params to url
                         if (dld.hasParameters())
                         {
@@ -421,10 +469,12 @@ public class DataManager
                 }
                 try
                 {
-                    httpEntity = httpResponse.getEntity();
-                    serverResponse = EntityUtils.toByteArray(httpEntity);
-					dld.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-					dld.setResponseBody(serverResponse);
+					if (httpResponse != null) {
+						httpEntity = httpResponse.getEntity();
+						serverResponse = EntityUtils.toByteArray(httpEntity);
+						dld.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+						dld.setResponseBody(serverResponse);
+					}
                 }
                 catch (Exception e)
                 {
