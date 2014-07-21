@@ -10,12 +10,14 @@ import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.litoralesential.adapter.NavDrawerListAdapter;
 import com.litoralesential.model.NavDrawerItem;
@@ -73,7 +75,7 @@ public class MainActivity extends Activity
 
 		String categoryName;
 		int categoryID;
-		for(int i=0; i<categories.size(); i++)
+		for(int i=0; i < categories.size(); i++)
 		{
 			categoryName = categories.get(i).name;
 			categoryID = categories.get(i).id;
@@ -116,7 +118,21 @@ public class MainActivity extends Activity
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        displayView(0);
+        Toast.makeText(mActivity.getApplicationContext(), "Pentru a accesa meniul, trageti dinspre stanga!", Toast.LENGTH_LONG).show();
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            //todo: do something here with the back button event
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     private void CreateAppDirectory()
     {

@@ -10,10 +10,11 @@ public class Objective implements Parcelable
 {
     public int id, categoryID;
     public String name, imageURL, description, telephone, GPSposition, website;
+
     Objective()
     {
         id = categoryID = -1;
-        imageURL = description = telephone = GPSposition = "";
+        name = imageURL = description = telephone = GPSposition = website = "";
     }
     public Objective(int aidi, int catAidi, String n, String url, String d, String t, String gps, String site)
     {
@@ -29,7 +30,8 @@ public class Objective implements Parcelable
 
 
 	// Parcelling part
-	public Objective(Parcel in){
+	public Objective(Parcel in)
+    {
 		this.id = in.readInt();
 		this.categoryID = in.readInt();
 		this.name = in.readString();
@@ -45,7 +47,8 @@ public class Objective implements Parcelable
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
+	public void writeToParcel(Parcel dest, int flags)
+    {
 		dest.writeInt(this.id);
 		dest.writeInt(this.categoryID);
 		dest.writeString(this.name);
@@ -55,7 +58,8 @@ public class Objective implements Parcelable
 		dest.writeString(this.GPSposition);
 		dest.writeString(this.website);
 	}
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
 		public Objective createFromParcel(Parcel in) {
 			return new Objective(in);
 		}

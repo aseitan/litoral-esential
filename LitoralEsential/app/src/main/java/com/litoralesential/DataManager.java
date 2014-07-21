@@ -112,7 +112,6 @@ public class DataManager
                         String telephone = c.getString(Utils.TAG_OBJECTIVE_TELEPHONE);
                         String GPSposition = c.getString(Utils.TAG_OBJECTIVE_GPSPOSITION);
                         String website = c.getString(Utils.TAG_OBJECTIVE_WEBSITE);
-
                         localObjectives.add(new Objective(id, categoryID, name, imageURL, description, telephone, GPSposition, website));
                     }
                 }
@@ -374,7 +373,7 @@ public class DataManager
             if(showWaitDialog) {
                 if (mActivity != null) {
                     mActivity.pDialog = new ProgressDialog(mActivity);
-                    mActivity.pDialog.setMessage("Please wait...");
+                    mActivity.pDialog.setMessage("Va rugam asteptati...");
                     mActivity.pDialog.setCancelable(false);
                     mActivity.pDialog.show();
                 }

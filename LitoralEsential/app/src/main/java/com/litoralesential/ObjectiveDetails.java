@@ -1,10 +1,13 @@
 package com.litoralesential;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,20 +24,19 @@ import java.io.File;
 
 public class ObjectiveDetails extends Fragment
 {
-    Objective chosenObjective;
+    static Objective chosenObjective;
     private MapView mMapView;
     private GoogleMap mMap;
-    static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-    static final LatLng KIEL = new LatLng(53.551, 9.993);
 
-
-	public static ObjectiveDetails newInstance(Objective obj) {
+	public static ObjectiveDetails newInstance(Objective obj)
+    {
 		ObjectiveDetails objective = new ObjectiveDetails();
 
 		// Supply index input as an argument.
 		Bundle args = new Bundle();
 		args.putParcelable("objective", obj);
 		objective.setArguments(args);
+        chosenObjective = obj;
 
 		return objective;
 	}
@@ -77,24 +79,38 @@ public class ObjectiveDetails extends Fragment
             {
                 mMapView.onCreate(savedInstanceState);
 
-                //TODO: load the actual position
-                mMapView.getMap().addMarker(new MarkerOptions().position(HAMBURG).title("Hamburg"));
-                mMapView.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-                mMapView.getMap().animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-                //mMapView.setLayoutParams(new com.google.android.gms.maps.MapView.LayoutParams(500,200));
-                //mMapView.setMinimumHeight(500);
-            }
+                String mapObjectiveName = "";
+                LatLng objPosition = new LatLng(0, 0);
 
+                if(chosenObjective != null)
+                {
+                    mapObjectiveName = chosenObjective.name;
+                    String position = chosenObjective.GPSposition;
+
+                    if(position.length() > 4) position = position.substring(1, position.length() - 4);
+                    String[] pos = position.split(",");
+                    if(pos.length == 2)
+                    {
+                        double lati = Double.parseDouble(pos[0]);
+                        double lngi = Double.parseDouble(pos[1]);
+                        objPosition = new LatLng(lati, lngi);
+                    }
+                }
+
+                mMapView.getMap().addMarker(new MarkerOptions().position(objPosition).title(mapObjectiveName));
+                mMapView.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(objPosition, 15));
+                mMapView.getMap().animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+            }
 
             ImageView objectiveImage = (ImageView) rootView.findViewById(R.id.imageObjective);
             if(objectiveImage != null)
             {
-                //TODO: load the actual position
 				String objID = Integer.toString(chosenObjective.id);
 
-				Bitmap bm;
+				Bitmap bm = null;
 				bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.OBJECTIVE_IMAGE_PREFIX + objID);
-				if(bm != null) {
+				if(bm != null)
+                {
 					objectiveImage.setImageBitmap(bm);
 				}
             }
@@ -108,7 +124,7 @@ public class ObjectiveDetails extends Fragment
                     objectiveName.setText("-");
             }
 
-            TextView objectiveDescription = (TextView) rootView.findViewById(R.id.objectiveAddress);
+            TextView objectiveDescription = (TextView) rootView.findViewById(R.id.objectiveDescription);
             if(objectiveDescription != null)
             {
                 if(chosenObjective != null && chosenObjective.description.length() > 0)
@@ -127,10 +143,25 @@ public class ObjectiveDetails extends Fragment
             }
 
             TextView objectiveWebsite = (TextView) rootView.findViewById(R.id.objectiveWebsite);
+
             if(objectiveWebsite != null)
             {
                 if(chosenObjective != null && chosenObjective.website.length() > 0)
+                {
                     objectiveWebsite.setText(chosenObjective.website);
+                    objectiveWebsite.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            String url = chosenObjective.website;
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        }
+                    });
+
+                }
                 else
                     objectiveWebsite.setText("-");
             }

@@ -51,33 +51,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5sp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Adresa:"
-                             />
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textStyle="bold"
-                            android:layout_marginLeft="5sp"
-                            android:id="@+id/objectiveAddress"
-                            android:text="Bd-ul Mamaia, nr 23"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5sp"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Telefon:" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="0728593710"
+                            android:text=""
                             android:layout_marginLeft="5sp"
                             android:textStyle="bold"
                             android:id="@+id/objectivePhone" />
@@ -98,9 +77,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="www.muzeuldearta.com"
+                        android:text=""
                         android:layout_marginLeft="5sp"
                         android:textStyle="bold"
+                        android:onClick="onClick"
+                        android:clickable="true"
                         android:id="@+id/objectiveWebsite" />
 
                 </LinearLayout>
@@ -117,7 +98,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Muzeul de Artă Cluj-Napoca este una dintre cele mai prestigioase instituţii muzeale cu profil artistic din România fiind nominalizat în anul 1997 pentru prestigiosul Premiu al Muzeului European al Anului- EMYA. Calitatea programelor culturale organizate a fost recompensată cu premii naţionale acordate de Ministerul Culturii şi Patrimoniului Naţional pentru expoziţiile Cultură şi artă armenească la Gherla (2003), Abodi Nagy Béla (2005) şi Avangarda din România în colecţii clujene (2007) precum şi cu distincţia acordată de Comitetul Român al ICOM pentru impactul asupra publicului a programului „De gustibus et coloribus…” (2010). "
+                    android:text=""
                     android:id="@+id/objectiveDescription"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
