@@ -19,6 +19,7 @@ public class ObjectiveList extends Fragment
 	MainActivity mActivity;
     ArrayList<Objective> chosenObjectives;
     String[] displayObjectives;
+    public boolean objectifeChosen;
 
 	public static ObjectiveList newInstance() {
 		ObjectiveList objective = new ObjectiveList();
@@ -29,6 +30,7 @@ public class ObjectiveList extends Fragment
 	{
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity)getActivity();
+        objectifeChosen = false;
 	}
 
     public void SetChosenObjectives(ArrayList<Objective> co)
@@ -51,7 +53,7 @@ public class ObjectiveList extends Fragment
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
+        objectifeChosen = false;
         View rootView = null;
         rootView = inflater.inflate(R.layout.fragment_general, container, false);
         listView = (ListView) rootView.findViewById(R.id.list);
@@ -74,6 +76,7 @@ public class ObjectiveList extends Fragment
                         ObjectiveDetails objectiveFragment = ObjectiveDetails.newInstance(chosenObjectives.get(position));
                         FragmentManager fragmentManager = mActivity.getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.frame_container, objectiveFragment).commit();
+                        objectifeChosen = true;
                     }
                 }
             });

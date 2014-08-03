@@ -31,6 +31,8 @@ public class MainActivity extends Activity
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
+    private int chosenID;
+    private ObjectiveList fragment;
 
     private ArrayAdapter<String> listAdapter ;
 	// nav drawer title
@@ -53,6 +55,8 @@ public class MainActivity extends Activity
     {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        chosenID = -1;
 
         CreateAppDirectory();
 		DetectScreenSize();
@@ -124,13 +128,25 @@ public class MainActivity extends Activity
 	}
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
-            //todo: do something here with the back button event
+            if(chosenID != -1 && fragment.objectifeChosen)
+            {
+                displayView(chosenID);
+            }
+            else
+            {
+                return super.onKeyDown(keyCode, event);
+            }
+        }
+        else
+        {
+            super.onKeyDown(keyCode, event);
         }
 
-        return super.onKeyDown(keyCode, event);
+        return false;
     }
 
 
@@ -194,7 +210,7 @@ public class MainActivity extends Activity
 		}
 	}
 
-	public void RefreshCategoryAdapter()
+    public void RefreshCategoryAdapter()
 	{
 		if(adapter != null)
         {
@@ -273,10 +289,12 @@ public class MainActivity extends Activity
 	private void displayView(int position)
     {
 		// update the main content by replacing fragments
-        ObjectiveList fragment;
+
         fragment = ObjectiveList.newInstance();
 
         //navMenuTitles[position]
+
+        chosenID = position;
 
 		if (dataManager != null)
         {
