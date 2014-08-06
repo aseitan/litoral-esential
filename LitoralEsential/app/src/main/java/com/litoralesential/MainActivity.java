@@ -329,7 +329,7 @@ public class MainActivity extends Activity
 
                     for(int i=0; i<objectives.size(); i++)
                     {
-                        if(objectives.get(i).categoryID == cat.id || (objectives.get(i).specialObjective == true))
+                        if(objectives.get(i).categoryID == cat.id || (position == 0 && objectives.get(i).specialObjective == true))
                         {
                             chosenOnes.add(objectives.get(i));
                         }
