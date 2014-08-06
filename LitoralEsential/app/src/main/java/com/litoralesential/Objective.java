@@ -3,31 +3,40 @@ package com.litoralesential;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by Korbul on 7/4/2014.
  */
-public class Objective implements Parcelable
+public class Objective implements Parcelable, Comparator<Objective>, Comparable<Objective>
 {
     public int id, categoryID;
     public String name, imageURL, description, telephone, GPSposition, website;
+    public boolean specialObjective;
+    public Date dateCreated;
 
     Objective()
     {
         id = categoryID = -1;
         name = imageURL = description = telephone = GPSposition = website = "";
-    }
-    public Objective(int aidi, int catAidi, String n, String url, String d, String t, String gps, String site)
-    {
-        id = aidi;
-        categoryID = catAidi;
-        name = n;
-        imageURL = String.format(Utils.OBJECTIVE_IMAGES_URL, id);
-        description = d;
-        telephone = t;
-        GPSposition = gps;
-        website = site;
+        specialObjective = false;
+        dateCreated = new Date(); //default stuff
     }
 
+    public Objective(int id, int categoryID, String name, String imageURL, String description, String telephone, String GPSposition, String website, Date dateCreated)
+    {
+        this.id = id;
+        this.categoryID = categoryID;
+        this.name = name;
+        this.imageURL = String.format(Utils.OBJECTIVE_IMAGES_URL, id);
+        this.description = description;
+        this.telephone = telephone;
+        this.GPSposition = GPSposition;
+        this.website = website;
+        this.specialObjective = false;
+        this.dateCreated = dateCreated;
+    }
 
 	// Parcelling part
 	public Objective(Parcel in)
@@ -42,11 +51,25 @@ public class Objective implements Parcelable
 		this.website = in.readString();
 	}
 
-	public int describeContents(){
+	public int describeContents()
+    {
 		return 0;
 	}
 
-	@Override
+    // Overriding the compareTo method
+    public int compareTo(Objective obj)
+    {
+        return (this.dateCreated).compareTo(obj.dateCreated);
+    }
+
+    // Overriding the compare method to sort the age
+    public int compare(Objective obj1, Objective obj2)
+    {
+        return obj1.dateCreated.compareTo(obj2.dateCreated);
+    }
+
+
+    @Override
 	public void writeToParcel(Parcel dest, int flags)
     {
 		dest.writeInt(this.id);

@@ -27,6 +27,8 @@ public class Utils
     public static final String TAG_OBJECTIVE_WEBSITE = "objectiveWebsite";
     public static final String TAG_OBJECTIVE_TELEPHONE = "ObjectivePhone";
     public static final String TAG_OBJECTIVE_GPSPOSITION = "ObjectiveGPSPosition";
+    public static final String TAG_OBJECTIVE_DATE = "created_at";
+
 
     public static final String userFile = "data.txt";
     public static final String categoryImageFolder = "category_images";

@@ -11,6 +11,7 @@ import com.litoralesential.downloadable.CategoryImageDownloadable;
 import com.litoralesential.downloadable.Downloadable;
 import com.litoralesential.downloadable.HttpMethod;
 import com.litoralesential.downloadable.ObjectiveImageDownloadable;
+import com.litoralesential.model.DateFormat;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,6 +30,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +102,9 @@ public class DataManager
                         int id = c.getInt(Utils.TAG_CATEGORY_ID);
                         localCategories.add(new Category(id, name, imageURL, website));
                     }
+
+                    final String dateFormat = "yyyy-MM-dd'T'HH:mm:ss";
+
                     for(int i = 0; i < objectivesArray.length(); i++)
                     {
                         JSONObject c = objectivesArray.getJSONObject(i);
@@ -112,7 +117,11 @@ public class DataManager
                         String telephone = c.getString(Utils.TAG_OBJECTIVE_TELEPHONE);
                         String GPSposition = c.getString(Utils.TAG_OBJECTIVE_GPSPOSITION);
                         String website = c.getString(Utils.TAG_OBJECTIVE_WEBSITE);
-                        localObjectives.add(new Objective(id, categoryID, name, imageURL, description, telephone, GPSposition, website));
+                        Date dateCreated = DateFormat.parseDate(c.getString(Utils.TAG_OBJECTIVE_DATE));
+
+                        localObjectives.add(new Objective(id, categoryID, name, imageURL, description, telephone, GPSposition, website, dateCreated));
+
+                        ArrayList<Objective> chosenOnes = new ArrayList<Objective>();
                     }
                 }
             }
@@ -155,8 +164,8 @@ public class DataManager
                     String telephone = c.getString(Utils.TAG_OBJECTIVE_TELEPHONE);
                     String GPSposition = c.getString(Utils.TAG_OBJECTIVE_GPSPOSITION);
                     String website = c.getString(Utils.TAG_OBJECTIVE_WEBSITE);
-
-                    serverObjectives.add(new Objective(id, categoryID, name, imageURL, description, telephone, GPSposition, website));
+                    Date dateCreated = DateFormat.parseDate(c.getString(Utils.TAG_OBJECTIVE_DATE));
+                    serverObjectives.add(new Objective(id, categoryID, name, imageURL, description, telephone, GPSposition, website, dateCreated));
                 }
             }
             catch (JSONException e)

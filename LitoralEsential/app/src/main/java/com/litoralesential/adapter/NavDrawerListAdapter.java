@@ -44,10 +44,11 @@ public class NavDrawerListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater)
-                    mainActivity.getApplicationContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        if (convertView == null)
+        {
+            LayoutInflater mInflater = (LayoutInflater) mainActivity.getApplicationContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
         }
 
@@ -55,19 +56,23 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
         txtTitle.setText(navDrawerItems.get(position).getTitle());
 
-        if (!navDrawerItems.get(position).isUpdatedImage()) {
+        /*
+        // remove the images for the moment
+        if (!navDrawerItems.get(position).isUpdatedImage())
+        {
             ImageView categoryImage = (ImageView) convertView.findViewById(R.id.category_image);
 
             String drawerItemID = Integer.toString(navDrawerItems.get(position).getID());
 
             Bitmap bm;
             bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.CATEGORY_IMAGE_PREFIX + drawerItemID);
-            if(bm != null) {
+            if(bm != null)
+            {
                 categoryImage.setImageBitmap(bm);
                 navDrawerItems.get(position).setUpdatedImage(true);
             }
         }
-
+        */
         return convertView;
     }
 

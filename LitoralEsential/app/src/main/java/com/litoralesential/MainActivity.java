@@ -24,6 +24,9 @@ import com.litoralesential.model.NavDrawerItem;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends Activity 
 {
@@ -79,7 +82,11 @@ public class MainActivity extends Activity
 
 		String categoryName;
 		int categoryID;
-		for(int i=0; i < categories.size(); i++)
+
+        navDrawerItems.add(new NavDrawerItem(-1, "Recente"));
+        navMenuTitles[0] = "Recente";
+
+        for(int i=1; i < categories.size(); i++)
 		{
 			categoryName = categories.get(i).name;
 			categoryID = categories.get(i).id;
@@ -288,11 +295,7 @@ public class MainActivity extends Activity
 	 * */
 	private void displayView(int position)
     {
-		// update the main content by replacing fragments
-
         fragment = ObjectiveList.newInstance();
-
-        //navMenuTitles[position]
 
         chosenID = position;
 
@@ -305,9 +308,28 @@ public class MainActivity extends Activity
                     Category cat = dataManager.GetLocalCategories().get(position);
                     ArrayList<Objective> objectives = dataManager.GetLocalObjectives();
                     ArrayList<Objective> chosenOnes = new ArrayList<Objective>();
+                    ArrayList<Objective> temp = new ArrayList<Objective>();
+
+                    temp.addAll( objectives );
+
+                    Collections.sort(temp);
+
+                    for(int i=0; i < temp.size() && i<15; i++)
+                    {
+                        for(int j=0; i < objectives.size(); j++)
+                        {
+                            if(temp.get(i).id == objectives.get(j).id)
+                            {
+                                objectives.get(j).specialObjective = true;
+                                break;
+                            }
+                        }
+                    }
+
+
                     for(int i=0; i<objectives.size(); i++)
                     {
-                        if(objectives.get(i).categoryID == cat.id)
+                        if(objectives.get(i).categoryID == cat.id || (objectives.get(i).specialObjective == true))
                         {
                             chosenOnes.add(objectives.get(i));
                         }

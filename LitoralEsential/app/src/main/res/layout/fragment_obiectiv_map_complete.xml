@@ -30,10 +30,11 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Muzeul de Arta Constanta"
-                    android:gravity="center_horizontal"
                     android:id="@+id/objectiveName"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="20dp"
+                    android:gravity="left"
+                    android:paddingLeft="10dp" />
 
                 <ImageView
                     android:layout_width="fill_parent"
@@ -45,7 +46,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -65,7 +67,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,7 +105,9 @@
                     android:id="@+id/objectiveDescription"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="20dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
 
                 <com.google.android.gms.maps.MapView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -110,7 +115,7 @@
                     android:layout_centerHorizontal="true"
                     android:clickable="false"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="256sp"/>
 
             </LinearLayout>
         </ScrollView>
