@@ -34,7 +34,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="left"
-                    android:paddingLeft="10dp" />
+                    android:paddingLeft="30dp" />
 
                 <ImageView
                     android:layout_width="fill_parent"
@@ -47,7 +47,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:orientation="horizontal"
-                    android:paddingLeft="5dp">
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -68,7 +69,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:orientation="horizontal"
-                    android:paddingLeft="5dp">
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -106,8 +108,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="20dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp" />
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp" />
 
                 <com.google.android.gms.maps.MapView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -115,7 +117,7 @@
                     android:layout_centerHorizontal="true"
                     android:clickable="false"
                     android:layout_width="match_parent"
-                    android:layout_height="256sp"/>
+                    android:layout_height="512dp"/>
 
             </LinearLayout>
         </ScrollView>

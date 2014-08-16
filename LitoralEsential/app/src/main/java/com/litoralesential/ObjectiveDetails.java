@@ -80,14 +80,7 @@ public class ObjectiveDetails extends Fragment
                 mMapView.onCreate(savedInstanceState);
                 mMapView.setClickable(false);
 
-                mMapView.setOnTouchListener(new View.OnTouchListener()
-                    {
-                        public boolean onTouch(View v, MotionEvent event)
-                        {
-                           return true;
-                        }
-                    });
-
+                mMapView.getMap().getUiSettings().setAllGesturesEnabled(false);
 
                 String mapObjectiveName = "";
                 LatLng objPosition = new LatLng(0, 0);
