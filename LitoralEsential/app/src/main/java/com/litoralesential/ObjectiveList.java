@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+import com.litoralesential.adapter.ItemListBaseAdapter;
 
 public class ObjectiveList extends Fragment
 {
@@ -21,7 +21,8 @@ public class ObjectiveList extends Fragment
     String[] displayObjectives;
     public boolean objectifeChosen;
 
-	public static ObjectiveList newInstance() {
+	public static ObjectiveList newInstance()
+    {
 		ObjectiveList objective = new ObjectiveList();
 		return objective;
 	}
@@ -56,8 +57,38 @@ public class ObjectiveList extends Fragment
         objectifeChosen = false;
         View rootView = null;
         rootView = inflater.inflate(R.layout.fragment_general, container, false);
-        listView = (ListView) rootView.findViewById(R.id.list);
 
+        listView = (ListView) rootView.findViewById(R.id.list);
+        if(listView != null && chosenObjectives.size() > 0)
+        {
+            listView.setAdapter(new ItemListBaseAdapter(mActivity, chosenObjectives));
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> a, View v, int position, long id)
+                {
+                    if (mActivity != null)
+                    {
+                        ObjectiveDetails objectiveFragment = ObjectiveDetails.newInstance(chosenObjectives.get(position));
+                        FragmentManager fragmentManager = mActivity.getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frame_container, objectiveFragment).commit();
+                        objectifeChosen = true;
+                    }
+                }
+            });
+        }
+        else
+        {
+            TextView tv = (TextView) rootView.findViewById(R.id.txtLabel);
+            if(tv != null)
+            {
+                tv.setText("Nu exista obiective in aceasta categorie.");
+            }
+        }
+
+        /*
+        listView = (ListView) rootView.findViewById(R.id.list);
         if(listView != null && displayObjectives.length > 0)
         {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_list_item_1, android.R.id.text1, displayObjectives);
@@ -89,6 +120,8 @@ public class ObjectiveList extends Fragment
                 tv.setText("Nu exista obiective in aceasta categorie.");
             }
         }
+        */
+
         return rootView;
     }
 }

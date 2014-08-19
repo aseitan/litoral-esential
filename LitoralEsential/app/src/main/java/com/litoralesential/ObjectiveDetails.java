@@ -110,9 +110,14 @@ public class ObjectiveDetails extends Fragment
             {
 				String objID = Integer.toString(chosenObjective.id);
 
-				Bitmap bm = null;
-				bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.OBJECTIVE_IMAGE_PREFIX + objID);
-				if(bm != null)
+                Bitmap bm = null;
+                try
+                {
+                    bm = BitmapFactory.decodeFile(Utils.externalPathRoot + File.separator + Utils.OBJECTIVE_IMAGE_PREFIX + objID);
+                }
+                catch(Exception e){}
+
+                if(bm != null)
                 {
 					objectiveImage.setImageBitmap(bm);
 				}

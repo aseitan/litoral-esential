@@ -21,7 +21,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageObjective"
-                    android:src="@drawable/muzeu"
                     android:scaleType="fitStart"
                     android:adjustViewBounds="true" />
 
